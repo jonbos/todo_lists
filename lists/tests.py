@@ -10,7 +10,7 @@ from lists.models import Item
 
 class HomePageTest(TestCase):
 
-    def test_home_page_returns_correct_html(self):
+    def test_uses_home_template(self):
 
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
@@ -31,16 +31,8 @@ class HomePageTest(TestCase):
         response = self.client.post(
             path='/', data={'item_text': 'A new list item'})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
-    def test_displays_all_list_items(self):
-        item_one=Item.objects.create(text='Pee')
-        item_two=Item.objects.create(text='Poop')
-
-        response=self.client.get('/')
-
-        self.assertIn('Pee', response.content.decode())
-        self.assertIn('Poop', response.content.decode())
+        self.assertEqual(response['location'],
+                         '/lists/the-only-list-in-the-world/')
 
 
 class ListItemTest(TestCase):
@@ -62,3 +54,19 @@ class ListItemTest(TestCase):
 
         self.assertEqual(first_saved_item.text, "The first ever list item")
         self.assertEqual(second_saved_item.text, "The second list item")
+
+
+class ListViewTest(TestCase):
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_displays_all_items(self):
+        item_one = Item.objects.create(text='Number one')
+        item_two = Item.objects.create(text='Number two')
+
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+
+        self.assertContains(response, 'Number one')
+        self.assertContains(response, 'Number two')
