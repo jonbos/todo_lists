@@ -6,3 +6,4 @@ __pycache__
 *sublime-*
 *.swp
 response_dict.html
+request_dict.html
