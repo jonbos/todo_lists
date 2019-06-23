@@ -7,7 +7,7 @@ from django.test import LiveServerTestCase
 
 import time
 
-MAX_WAIT_TIME = 10
+MAX_WAIT_TIME = 2
 
 
 class NewVisitorTest(LiveServerTestCase):
