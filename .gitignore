@@ -10,3 +10,4 @@ request_dict.html
 .DS_Store
 *.materialize
 static/
+.env
