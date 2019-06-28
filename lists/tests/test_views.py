@@ -49,7 +49,7 @@ class NewListTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
 
     def test_invalid_list_items_arent_saved(self):
-        response = self.client.post(
+        self.client.post(
             '/lists/new', data={'text': ''})
 
         self.assertEqual(List.objects.count(), 0)
@@ -64,7 +64,7 @@ class ListViewTest(TestCase):
             f'/lists/{list_.id}/', data={'text': ''})
 
     def test_for_invalid_input_nothing_saved_to_db(self):
-        response = self.post_invalid_input()
+        self.post_invalid_input()
         self.assertEqual(Item.objects.count(), 0)
 
     def test_for_invalid_input_renders_list_template(self):
@@ -87,13 +87,13 @@ class ListViewTest(TestCase):
 
     def test_only_displays_list_items_for_that_list(self):
         correct_list = List.objects.create()
-        item_one = Item.objects.create(text='Number one', list=correct_list)
-        item_two = Item.objects.create(text='Number two', list=correct_list)
+        Item.objects.create(text='Number one', list=correct_list)
+        Item.objects.create(text='Number two', list=correct_list)
 
         other_list = List.objects.create()
-        other_item_one = Item.objects.create(
+        Item.objects.create(
             text='Other list number one', list=other_list)
-        other_item_two = Item.objects.create(
+        Item.objects.create(
             text='Other list number two', list=other_list)
         response = self.client.get(f'/lists/{correct_list.id}/')
 
@@ -128,8 +128,8 @@ class ListViewTest(TestCase):
         other_list = List.objects.create()
 
         response = self.client.post(
-            path=f'/lists/{correct_list.id}/', data={'text': 'A new list item'})
-
+            path=f'/lists/{correct_list.id}/',
+            data={'text': 'A new list item'})
         self.assertRedirects(response, f'/lists/{correct_list.id}/')
 
     def test_validation_errors_end_up_on_lists_page(self):
