@@ -57,6 +57,7 @@ class InputValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
         self.get_item_input_box().send_keys("Buy cookies")
         self.get_item_input_box().send_keys(Keys.ENTER)
+        
 
         # She sees a helpful error message
         self.wait_for(lambda: self.assertEqual(
