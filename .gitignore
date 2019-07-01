@@ -9,5 +9,5 @@ response_dict.html
 request_dict.html
 .DS_Store
 *.materialize
-static/
+/static
 .env
