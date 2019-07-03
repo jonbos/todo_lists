@@ -12,6 +12,16 @@
     </head>
     <body>
         <div class="container">
+            <nav class='navbar navbar-default' role='navigation'>
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">Superlists</a>
+                    <form class="navbar-form navbar-right" method="POST" action="#">
+                        <span>Enter email to login:</span>
+                        <input type="text" name="email" class="form-control"/>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </nav>
             <div class="row">
                 <div class="col-md-6 offset-md-3 jumbotron">
                     <div class="text-center">
@@ -38,9 +48,9 @@
     <script src="/static/jquery-3.4.1.min.js"></script>
     <script src="/static/list.js"></script>
     <script>
-        $(document).ready(function (){
-        window.Superlists.initialize();
-        });
+    $(document).ready(function (){
+    window.Superlists.initialize();
+    });
     </script>
 </body>
 </html>
