@@ -13,8 +13,9 @@ def new_list(request):
     form = ItemForm(data=request.POST)
     if form.is_valid():
         list_ = List.objects.create()
+        list_.owner = request.User
+        list_.save()
         form.save(list_)
-        # Item.objects.create(text=request.POST['text'], list=list_)
         return redirect(list_)
 
     return render(request, 'home.html', {'form': form})
