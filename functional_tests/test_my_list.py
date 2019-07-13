@@ -31,11 +31,11 @@ class MyListsTest(FunctionalTest):
         first_list_url = self.browser.current_url
 
         # She notices a 'My lists' link for the first time
-        self.browser.find_element_by_link_text('My list').click()
+        self.browser.find_element_by_link_text('My Lists').click()
 
         # She sees that her list is in there, 
         #named according to it's first list item
-        self.wait_for(lambda: browser.find_element_by_link_text('Buy a motorcycle'))
+        self.wait_for(lambda: self.browser.find_element_by_link_text('Buy a motorcycle'))
         self.browser.find_element_by_link_text('Buy a motorcycle').click()
         self.wait_for(lambda: self.assertEqual(self.browser.curret_url, first_list_url))
 

@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.test import TestCase
 from unittest import skip
 from lists.models import Item, List
-from lists.forms import (ItemForm, EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR, ExistingListItemForm)
+from lists.forms import (ItemForm, EMPTY_ITEM_ERROR,
+                         DUPLICATE_ITEM_ERROR, ExistingListItemForm)
 from django.utils.html import escape
 
 
@@ -81,7 +84,6 @@ class ListViewTest(TestCase):
         expected_error = escape(EMPTY_ITEM_ERROR)
         self.assertContains(response, expected_error)
 
-
     def test_uses_list_template(self):
         list_ = List.objects.create()
         response = self.client.get(f"/lists/{list_.id}/")
@@ -151,12 +153,25 @@ class ListViewTest(TestCase):
 
     def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
         list1 = List.objects.create()
-        item1= Item.objects.create(list=list1, text="test")
+        item1 = Item.objects.create(list=list1, text="test")
 
         response = self.client.post(
             path=f'/lists/{list1.id}/', data={'text': 'test'})
-        expected_error=escape(DUPLICATE_ITEM_ERROR)
- 
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
+
         self.assertTemplateUsed(response, 'list.html')
         self.assertContains(response, expected_error)
         self.assertEqual(Item.objects.all().count(), 1)
+
+
+class MyListTests(TestCase):
+    def test_my_list_url_renders_my_list_template(self):
+        User.objects.create(email = 'a@b.com')
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertTemplateUsed(response, 'my_lists.html')
+        
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create(email='wrong@wrong.wrong')
+        correct_user = User.objects.create(email='a@b.com')
+        response = self.client.get('/lists/users/a@b.com/')
+        self.assertEqual(response.context['owner'], correct_user)

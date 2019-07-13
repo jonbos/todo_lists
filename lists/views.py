@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from lists.models import List
 from lists.forms import ItemForm, ExistingListItemForm
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 def home_page(request):
@@ -28,3 +30,8 @@ def view_list(request, list_id):
             form.save()
             return redirect(list_)
     return render(request, 'list.html', {"list": list_, "form": form, })
+
+
+def my_lists(request, email):
+    owner = User.objects.get(email=email)
+    return render(request, 'my_lists.html', {'owner': owner, })
