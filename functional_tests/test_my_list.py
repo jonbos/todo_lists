@@ -33,11 +33,11 @@ class MyListsTest(FunctionalTest):
         # She notices a 'My lists' link for the first time
         self.browser.find_element_by_link_text('My Lists').click()
 
-        # She sees that her list is in there, 
+        # She sees that her list is in there,
         #named according to it's first list item
         self.wait_for(lambda: self.browser.find_element_by_link_text('Buy a motorcycle'))
         self.browser.find_element_by_link_text('Buy a motorcycle').click()
-        self.wait_for(lambda: self.assertEqual(self.browser.curret_url, first_list_url))
+        self.wait_for(lambda: self.assertEqual(self.browser.current_url, first_list_url))
 
         #She starts another list
         self.browser.get(self.live_server_url)
@@ -45,11 +45,12 @@ class MyListsTest(FunctionalTest):
         second_list_url = self.browser.current_url
 
         #Under my lists, her new list appears
-        self.wait_for(lambda: browser.find_element_by_link_text('Buy a helmet'))
+        self.browser.find_element_by_link_text('My Lists').click()
+        self.wait_for(lambda: self.browser.find_element_by_link_text('Buy a helmet'))
         self.browser.find_element_by_link_text('Buy a helmet').click()
-        self.wait_for(lambda: self.assertEqual(self.browser.curret_url, second_list_url))
+        self.wait_for(lambda: self.assertEqual(self.browser.current_url, second_list_url))
 
         #She logs out. The 'my lists' option disappears
         self.browser.find_element_by_link_text('Log out').click()
-        self.wait_for(lambda: self.assertEqual(self.browser.find_elements_by_link_text(), []))
-        
+        self.wait_for(lambda: self.assertEqual(self.browser.find_elements_by_link_text('My Lists'), []))
+
