@@ -57,7 +57,7 @@ class NewListViewIntegratedTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
 
     def test_invalid_list_items_arent_saved_but_show_error(self):
-        self.client.post(
+        response = self.client.post(
             '/lists/new', data={'text': ''})
 
         self.assertEqual(List.objects.count(), 0)
