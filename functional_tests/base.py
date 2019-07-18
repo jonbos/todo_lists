@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 from .server_tools import reset_database
 
-MAX_WAIT_TIME = 10
+MAX_WAIT_TIME = 20
 
 SCREEN_DUMP_LOCATION = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'screendumps')
