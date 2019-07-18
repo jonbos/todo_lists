@@ -11,3 +11,4 @@ request_dict.html
 *.materialize
 /static
 .env
+functional_tests/screendumps
