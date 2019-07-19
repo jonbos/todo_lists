@@ -15,6 +15,20 @@ SCREEN_DUMP_LOCATION = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'screendumps')
 
 
+def wait(fn):
+    def modified_fn(*args, **kwargs):
+        start_time = time.time()
+        while True:
+            try:
+                return fn(*args, **kwargs)
+            except (WebDriverException, AssertionError) as e:
+                if time.time() - start_time > MAX_WAIT_TIME:
+                    raise e
+                time.sleep(.5)
+
+    return modified_fn
+
+
 class FunctionalTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -72,18 +86,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             windowid=self._windowid,
             timestamp=timestamp)
 
-    def wait(fn):
-        def modified_fn(*args, **kwargs):
-            start_time = time.time()
-            while True:
-                try:
-                    return fn(*args, **kwargs)
-                except (WebDriverException, AssertionError) as e:
-                    if time.time() - start_time > MAX_WAIT_TIME:
-                        raise e
-                    time.sleep(.5)
 
-        return modified_fn
 
     @wait
     def wait_for(self, fn):
