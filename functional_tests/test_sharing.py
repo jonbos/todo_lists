@@ -44,7 +44,7 @@ class SharingTest(FunctionalTest):
         MyListsPage(self).go_to_my_lists_page()
 
         # He sees Juan's list is in there
-        self.browser.find_elements_by_link_text('Miriam Makebe').click()
+        self.browser.find_element_by_link_text('Miriam Makebe').click()
 
         # On the list page, Matt can see says that it's Jon's list
         self.wait_for(lambda: self.assertEqual(
@@ -55,5 +55,5 @@ class SharingTest(FunctionalTest):
 
         #When Juan visits the list, he sees the list item added by Matt
         self.browser=juan_browser
-        self.browser.refresh
+        self.browser.refresh()
         list_page.wait_for_row_in_list_table('Hola, Juan!', 2)

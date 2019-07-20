@@ -65,8 +65,6 @@ class NewListViewIntegratedTest(TestCase):
         expected_error = escape(EMPTY_ITEM_ERROR)
         self.assertContains(response, expected_error)
 
-
-
     def test_list_owner_is_saved_if_user_is_authenticated(self):
         user = User.objects.create(email='a@b.com')
         self.client.force_login(user)
@@ -238,3 +236,32 @@ class MyListTests(TestCase):
         correct_user = User.objects.create(email='a@b.com')
         response = self.client.get('/lists/users/a@b.com/')
         self.assertEqual(response.context['owner'], correct_user)
+
+
+class ShareListTests(TestCase):
+
+    def test_POST_redirects_to_list_page(self):
+        list_ = List.objects.create()
+        response = self.client.post(
+            f"/lists/{list_.id}/share", data={'sharee': 'test@test.com'})
+        self.assertRedirects(response, f"/lists/{list_.id}/")
+
+    def test_user_is_added_to_shared_with(self):
+        shared_with_user = User.objects.create(email='test@test.com')
+        list_ = List.objects.create()
+        response = self.client.post(
+            f"/lists/{list_.id}/share", data={'sharee': shared_with_user.email})
+        self.assertIn(shared_with_user, list_.shared_with.all())
+
+
+    def test_shared_lists_show_on_my_lists_page(self):
+        user = User.objects.create(email='a@b.com')
+        self.client.force_login(user)
+        list_=List.create_new(first_item_text='test')
+        list_.shared_with.add(user)
+        print(f"/users/{user.email}/")
+        response = self.client.get(f"/lists/users/{user.email}/")
+
+        self.assertContains(response, f'Lists shared with {user.email}')
+        self.assertContains(response, f'{list_.name}')
+

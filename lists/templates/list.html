@@ -2,9 +2,36 @@
 {% block header_text %}Your To-Do List{% endblock header_text %}
 {% block form_action %}{% url 'view_list' list.id %}{% endblock %}
 {% block table %}
-<table id="id_list_table" class="table">
-    {% for item in list.item_set.all %}
-        <tr><td>{{ forloop.counter }}. {{ item.text }}</td></tr>
-    {% endfor %}
-</table>
+{% if list.owner %}
+    <span id="id_list_owner">{{ list.owner.email }}</span>
+{% endif %}
+<div class="container">
+    <table id="id_list_table" class="table">
+        {% for item in list.item_set.all %}
+            <tr><td>{{ forloop.counter }}. {{ item.text }}</td></tr>
+        {% endfor %}
+    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <form method="POST" action="{% url 'share_list' list.id%}">
+                    <div class="form-group">
+                        <label for="sharee">Share List</label>
+                        <input type="email" class="form-control" id="sharee" name="sharee" placeholder="your-friend@example.com">
+                        {% csrf_token %}
+                    </div>
+                </form>
+            </div>
+            {% if list.shared_with.all %}
+                <div class="col-sm">
+                    List shared with:
+                    {% for sharee in list.shared_with.all %}
+                    <ul class='list-sharee'>{{ sharee.email }}</ul>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+    </div>
+</div>
+</div>
 {% endblock table %}

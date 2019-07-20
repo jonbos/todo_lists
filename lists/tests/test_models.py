@@ -40,6 +40,17 @@ class ListModelTest(TestCase):
         Item.objects.create(text='second item', list=list_)
         self.assertEqual(list_.name, 'first item')
 
+    def test_adding_user_to_shared_with_saves_user_to_list(self):
+        list_ = List.objects.create()
+        correct_user = User.objects.create(email='a@b.com')
+        incorrect_user = User.objects.create(email='bad@wrong.com')
+
+        list_.shared_with.add(correct_user)
+        print(list_.shared_with.all())
+        self.assertIn(correct_user, list_.shared_with.all())
+        self.assertNotIn(incorrect_user, list_.shared_with.all())
+
+
 
 class ItemModelTest(TestCase):
 
